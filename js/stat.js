@@ -1,48 +1,45 @@
 'use strict';
 window.renderStatistics = function (ctx, names, times) {
   var i = 0;
-  var maxElement = -1;
-  function rectDrowing(rectColor, rectX, rectY, rectWidth, rectHeight) {
-    ctx.fillStyle = rectColor;
-    ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+  function drawRect(context, rectColor, rectX, rectY, rectWidth, rectHeight) {
+    context.fillStyle = rectColor;
+    context.fillRect(rectX, rectY, rectWidth, rectHeight);
   }
-  rectDrowing('rgba(0, 0, 0, 0.7)', 110, 20, 420, 270);
-  rectDrowing('rgba(255, 255, 255, 1.0)', 100, 10, 420, 270);
+  drawRect(ctx, 'rgba(0, 0, 0, 0.7)', 110, 20, 420, 270);
+  drawRect(ctx, 'rgba(255, 255, 255, 1.0)', 100, 10, 420, 270);
 
-  function textRender(context, textColor, textSize, textFont, textLine, textX, textY) {
+  function renderText(context, textColor, textSize, textFont, textLine, textX, textY) {
     context.fillStyle = textColor;
     context.font = textSize + ' ' + textFont;
     context.fillText(textLine, textX, textY);
   }
-  textRender(ctx, 'black', '16px', 'PT Mono', 'Ура вы победили!', 120, 40);
-  textRender(ctx, 'black', '16px', 'PT Mono', 'Список результатов:', 110, 60);
+  renderText(ctx, 'black', '16px', 'PT Mono', 'Ура вы победили!', 120, 40);
+  renderText(ctx, 'black', '16px', 'PT Mono', 'Список результатов:', 110, 60);
 
-  function searchMaxElement(array) {
-    for (i = 0; i < array.length; i++) {
-      var arrayElement = array[i];
-      if (arrayElement > maxElement) {
-        maxElement = arrayElement;
+  function searchMaxElement(arr) {
+    var maxElement = -1;
+    for (i = 0; i < arr.length; i++) {
+      if (arr[i] > maxElement) {
+        maxElement = arr[i];
       }
     }
     return maxElement;
   }
-  searchMaxElement(times);
+  var maxElement = searchMaxElement(times);
   function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
   function getRandomColor() {
-    var r = getRandomNumber(0, 255);
-    var g = getRandomNumber(0, 255);
     var b = getRandomNumber(0, 255);
     var o = Math.random().toFixed(1);
-    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + o + ')';
+    return 'rgba(0, 0, ' + b + ', ' + o + ')';
   }
-  function histogramDrowing(histogramX, histogramY, histogramWidth, histogramHeight) {
-    ctx.fillRect(histogramX, histogramY, histogramWidth, histogramHeight);
-    ctx.fillStyle = 'black';
-    ctx.fillText(names[i], histogramX, histogramY + histogramHeight + 20);
-    ctx.fillText(Math.round(times[i]), histogramX, histogramY - 10);
+  function drawHistogram(context, histogramX, histogramY, histogramWidth, histogramHeight) {
+    context.fillRect(histogramX, histogramY, histogramWidth, histogramHeight);
+    context.fillStyle = 'black';
+    context.fillText(names[i], histogramX, histogramY + histogramHeight + 20);
+    context.fillText(Math.round(times[i]), histogramX, histogramY - 10);
   }
 
   for (i = 0; i < times.length; i++) {
@@ -58,10 +55,10 @@ window.renderStatistics = function (ctx, names, times) {
     var histogramHeight = times[i] * step;
     if (names[i] !== 'Вы') {
       ctx.fillStyle = getRandomColor();
-      histogramDrowing(histogramX, histogramY, histogramWidth, histogramHeight);
+      drawHistogram(ctx, histogramX, histogramY, histogramWidth, histogramHeight);
     } else {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-      histogramDrowing(histogramX, histogramY, histogramWidth, histogramHeight);
+      drawHistogram(ctx, histogramX, histogramY, histogramWidth, histogramHeight);
     }
   }
 };
